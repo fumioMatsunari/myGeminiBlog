@@ -5,3 +5,6 @@ __pycache__/
 # アップロードされた画像を除外（最初は空の状態で管理するため）
 static/uploads/*
 !static/uploads/.gitkeep
+
+# 自分のブログデータをGitHubに上げない設定
+blog_data.json
