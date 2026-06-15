@@ -1,0 +1,7 @@
+# Pythonの一時ファイルを除外
+__pycache__/
+*.pyc
+
+# アップロードされた画像を除外（最初は空の状態で管理するため）
+static/uploads/*
+!static/uploads/.gitkeep
