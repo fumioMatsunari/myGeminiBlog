@@ -9,7 +9,7 @@
             --bg-color: #f7f9fa;
             --card-bg: #ffffff;
             --text-main: #2c3e50;
-            --accent-color: #3498db; /* 編集はスマートなブルーに */
+            --accent-color: #3498db; /* 編集画面はスマートなブルー */
             --focus-color: #3498db;
         }
 
@@ -54,7 +54,7 @@
             font-size: 14px;
         }
 
-        input[type="text"], textarea {
+        input[type="text"], textarea, input[type="file"] {
             width: 100%;
             padding: 12px;
             box-sizing: border-box;
@@ -65,7 +65,7 @@
             transition: border-color 0.2s, box-shadow 0.2s;
         }
 
-        input[type="text"]:focus, textarea :focus {
+        input[type="text"]:focus, textarea:focus {
             outline: none;
             border-color: var(--focus-color);
             box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
@@ -75,6 +75,12 @@
         textarea {
             height: 240px;
             resize: vertical;
+        }
+
+        .current-image-info {
+            font-size: 13px;
+            color: #7f8c8d;
+            margin-top: 5px;
         }
 
         .actions {
@@ -118,23 +124,32 @@
         <div class="form-card">
             <h1>記事を編集する</h1>
             <form method="POST" enctype="multipart/form-data">
+                
                 <div class="form-group">
                     <label for="title">タイトル</label>
-                    <input type="text" id="title" name="title" required placeholder="心に浮かんだタイトルを...">
+                    <input type="text" id="title" name="title" value="{{ post.title }}" required>
                 </div>
+
                 <div class="form-group">
-                    <label for="image">アイキャッチ画像 (写真やイラスト)</label>
+                    <label for="image">アイキャッチ画像を変更 (新しく選ぶと上書きされます)</label>
                     <input type="file" id="image" name="image" accept="image/*">
+                    {% if post.image %}
+                    <div class="current-image-info">現在の画像: {{ post.image }}</div>
+                    {% endif %}
                 </div>
+
                 <div class="form-group">
                     <label for="content">本文</label>
-                    <textarea id="content" name="content" required placeholder="ここに自由に文章を書きましょう..."></textarea>
+                    <textarea id="content" name="content" required>{{ post.content }}</textarea>
                 </div>
+
                 <div class="actions">
-                    <a href="/" class="back-link">← 戻る</a>
-                    <button type="submit" class="btn-submit">記事を公開する</button>
+                    <a href="/" class="back-link">← キャンセル</a>
+                    <button type="submit" class="btn-submit">変更を保存する</button>
                 </div>
-            </form>        </div>
+
+            </form>
+        </div>
     </div>
 </body>
 </html>
