@@ -12,9 +12,10 @@
         h1 { font-size: 24px; margin-top: 0; margin-bottom: 30px; border-left: 4px solid var(--accent-color); padding-left: 12px; }
         .form-group { margin-bottom: 25px; }
         label { display: block; margin-bottom: 8px; font-weight: bold; font-size: 14px; }
-        input[type="text"], textarea, input[type="file"] { width: 100%; padding: 12px; box-sizing: border-box; border: 1px solid #dee2e6; border-radius: 6px; font-size: 16px; background-color: #fcfcfc; }
-        input[type="text"]:focus, textarea:focus { outline: none; border-color: var(--focus-color); box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1); background-color: #fff; }
+        input[type="text"], textarea, input[type="file"], select { width: 100%; padding: 12px; box-sizing: border-box; border: 1px solid #dee2e6; border-radius: 6px; font-size: 16px; background-color: #fcfcfc; }
+        input[type="text"]:focus, textarea:focus, select:focus { outline: none; border-color: var(--focus-color); box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1); background-color: #fff; }
         textarea { height: 240px; resize: vertical; }
+        .sub-label { font-size: 12px; color: #7f8c8d; margin-top: 4px; display: block; }
         .actions { display: flex; justify-content: space-between; align-items: center; margin-top: 30px; }
         .btn-submit { background-color: var(--accent-color); color: white; padding: 12px 30px; border: none; border-radius: 25px; cursor: pointer; font-size: 16px; font-weight: bold; transition: background-color 0.2s; }
         .btn-submit:hover { background-color: #27ae60; }
@@ -32,8 +33,17 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="category">カテゴリー（タグ）</label>
-                    <input type="text" id="category" name="category" placeholder="例: 日記、パソコン、散歩 など">
+                    <label>カテゴリー（タグ）</label>
+                    
+                    <select name="existing_category" style="margin-bottom: 10px;">
+                        <option value="">-- 既存のカテゴリーから選ぶ --</option>
+                        {% for cat in categories %}
+                        <option value="{{ cat }}">{{ cat }}</option>
+                        {% endfor %}
+                    </select>
+                    
+                    <input type="text" name="new_category" placeholder="新しくカテゴリーを追加する場合に入力">
+                    <span class="sub-label">※新しく追加したい単語がある場合は下の欄に入力してください。下の入力が優先されます。</span>
                 </div>
 
                 <div class="form-group">
