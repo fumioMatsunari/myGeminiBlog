@@ -26,7 +26,7 @@ def load_data():
                 "content": "これはPythonとFlaskを使って作ったブログの最初の投稿です！",
                 "date": datetime.now().strftime("%Y-%m-%d %H:%M"),
                 "image": None,
-                "category": "プログラミング",  # 👇 初期データにカテゴリーを追加
+                "category": "プログラミング",
                 "comments": []
             }
         ]
@@ -41,11 +41,9 @@ def save_data(data):
 @app.route('/')
 def home():
     posts = load_data()
-    # 絞り込み用のカテゴリーが指定されているかチェック
     selected_category = request.args.get('category')
     
     if selected_category:
-        # 選ばれたカテゴリーの記事だけを抽出
         posts = [p for p in posts if p.get('category') == selected_category]
         
     return render_template('index.html', posts=reversed(posts), selected_category=selected_category)
@@ -55,7 +53,9 @@ def new_post():
     if request.method == 'POST':
         title = request.form['title']
         content = request.form['content']
-        category = request.form.get('category', '未分類')  # 👇 カテゴリーを取得
+        category = request.form.get('category', '未分類')
+        if not category.strip():
+            category = '未分類'
         
         file = request.files.get('image')
         image_filename = None
@@ -75,7 +75,7 @@ def new_post():
                 "content": content,
                 "date": datetime.now().strftime("%Y-%m-%d %H:%M"),
                 "image": image_filename,
-                "category": category,  # 👇 保存データに追加
+                "category": category,
                 "comments": []
             })
             save_data(posts)
@@ -93,7 +93,9 @@ def edit_post(post_id):
     if request.method == 'POST':
         title = request.form['title']
         content = request.form['content']
-        category = request.form.get('category', '未分類')  # 👇 編集時も取得
+        category = request.form.get('category', '未分類')  # ⚠️変更：フォームからカテゴリーを取得
+        if not category.strip():
+            category = '未分類'
         
         file = request.files.get('image')
         if file and file.filename != '' and allowed_file(file.filename):
@@ -105,7 +107,7 @@ def edit_post(post_id):
         if title and content:
             post['title'] = title
             post['content'] = content
-            post['category'] = category  # 👇 編集内容を反映
+            post['category'] = category  # ⚠️変更：カテゴリーを更新
             post['date'] = datetime.now().strftime("%Y-%m-%d %H:%M") + " (編集済)"
             
             for i, p in enumerate(posts):
@@ -116,6 +118,15 @@ def edit_post(post_id):
             return redirect(url_for('home'))
             
     return render_template('edit_post.html', post=post)
+
+# 👇 【新機能】記事を削除するルート
+@app.route('/post/delete/<int:post_id>', methods=['POST'])
+def delete_post(post_id):
+    posts = load_data()
+    # 該当の記事を除外した新しいリストを作る
+    posts = [p for p in posts if p['id'] != post_id]
+    save_data(posts)
+    return redirect(url_for('home'))
 
 @app.route('/post/<int:post_id>/comment', methods=['POST'])
 def add_comment(post_id):
